@@ -1,0 +1,273 @@
+/* ============================================================
+   响应式布局样式
+   断点：移动端 < 768px | 平板 768px~1024px | 桌面 > 1024px
+   ============================================================ */
+
+/* ---- 全局交互元素最小点击区域（移动端 44x44px） ---- */
+@media screen and (max-width: 767px) {
+  /* 按钮最小点击区域 */
+  .el-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 导航链接最小点击区域 */
+  .nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* 下拉菜单项最小点击区域 */
+  .el-dropdown-menu__item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 分页按钮最小点击区域 */
+  .el-pagination .el-pager li,
+  .el-pagination .btn-prev,
+  .el-pagination .btn-next {
+    min-width: 44px;
+    min-height: 44px;
+    line-height: 44px;
+  }
+}
+
+/* ---- 导航栏移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  /* 隐藏桌面端导航链接 */
+  .app-header .nav-links {
+    display: none !important;
+  }
+
+  /* 收紧 header 内边距 */
+  .app-header .header-content {
+    padding: 0 12px;
+  }
+
+  /* Logo 字体缩小 */
+  .app-header .logo-text {
+    font-size: 18px;
+  }
+
+  /* 用户操作区间距收紧 */
+  .app-header .user-actions {
+    gap: 6px;
+  }
+
+  /* 登录/注册按钮在移动端缩小内边距 */
+  .app-header .user-actions .el-button {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  /* 发布按钮 */
+  .app-header .user-actions .el-button--primary {
+    padding: 0 14px;
+  }
+}
+
+/* ---- 主体内容区移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .app-main {
+    padding: 8px 0;
+  }
+
+  .app-main-container {
+    padding: 0 12px;
+  }
+}
+
+/* ---- 文章卡片移动端适配（宽度 100%） ---- */
+@media screen and (max-width: 767px) {
+  /* 文章卡片撑满容器宽度 */
+  .article-card {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  /* 禁用卡片悬浮上移动画（移动端无 hover） */
+  .article-card:hover {
+    transform: none;
+  }
+
+  /* 文章标题字号缩小 */
+  .article-card .article-title {
+    font-size: 15px;
+  }
+
+  /* 摘要字号缩小 */
+  .article-card .article-summary {
+    font-size: 13px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 统计数据间距收紧 */
+  .article-card .article-stats {
+    gap: 10px;
+  }
+
+  /* 隐藏标签（次要信息折叠） */
+  .article-card .article-tags {
+    display: none;
+  }
+}
+
+/* ---- 首页搜索栏移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .home-container {
+    padding: 10px 0;
+  }
+
+  .search-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-light, #e4e7ed);
+  }
+
+  /* 搜索框独占一行 */
+  .search-bar .search-input {
+    width: 100%;
+    flex: none;
+    order: 1;
+  }
+
+  /* 排序选择器和按钮共享第二行 */
+  .search-bar .sort-select {
+    flex: 1;
+    order: 2;
+  }
+
+  .search-bar .el-button {
+    order: 3;
+    flex-shrink: 0;
+  }
+
+  /* 分页器在移动端允许横向滚动 */
+  .pagination-container {
+    overflow-x: auto;
+    padding: 12px 0;
+  }
+
+  .pagination-container .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  /* 隐藏分页器中的次要控件 */
+  .pagination-container .el-pagination__sizes,
+  .pagination-container .el-pagination__jump {
+    display: none;
+  }
+}
+
+/* ---- 文章详情页移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .article-detail-container {
+    padding: 0;
+  }
+
+  .article-detail-container .article-content {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* 隐藏详情页侧边次要信息 */
+  .article-detail-container .article-meta-secondary {
+    display: none;
+  }
+}
+
+/* ---- 评论区移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .comment-list-container {
+    padding: 0;
+  }
+
+  .comment-item .comment-content {
+    font-size: 13px;
+  }
+
+  /* 回复列表缩进减小 */
+  .reply-list {
+    margin-left: 12px;
+    padding-left: 8px;
+  }
+}
+
+/* ---- 个人主页移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .profile-container {
+    padding: 0;
+  }
+
+  /* 用户信息卡片布局调整为垂直 */
+  .profile-container .user-info-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* 隐藏次要统计信息（关注/粉丝详情） */
+  .profile-container .social-stats-detail {
+    display: none;
+  }
+}
+
+/* ---- 短链接工具页移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  .short-link-container {
+    padding: 0;
+  }
+
+  /* 生成区域按钮独占一行 */
+  .short-link-container .generate-section {
+    flex-direction: column;
+  }
+
+  .short-link-container .generate-section .el-button {
+    width: 100%;
+  }
+}
+
+/* ---- 对话框移动端适配 ---- */
+@media screen and (max-width: 767px) {
+  /* 对话框宽度撑满屏幕 */
+  .el-dialog {
+    width: 95vw !important;
+    margin: 0 auto;
+  }
+
+  .el-dialog__body {
+    padding: 16px;
+  }
+}
+
+/* ---- 平板端适配（768px ~ 1024px） ---- */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .app-main-container {
+    padding: 0 16px;
+  }
+
+  .home-container {
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .article-card .article-title {
+    font-size: 17px;
+  }
+}
+
+/* ---- 桌面端（> 1024px）保持默认样式 ---- */
+@media screen and (min-width: 1025px) {
+  .app-main-container {
+    max-width: 1200px;
+  }
+}
