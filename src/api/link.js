@@ -6,7 +6,7 @@ import request from '@/utils/request'
  * @returns {Promise<{data: Object, message: string}>} 生成的短链接信息
  */
 export const generateShortLink = (articleId) => {
-  return request.post('/links/generate', null, { params: { articleId } })
+  return request.post('links/generate', null, { params: { articleId } })
 }
 
 /**

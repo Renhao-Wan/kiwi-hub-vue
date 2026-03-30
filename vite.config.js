@@ -13,9 +13,10 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
+    host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://47.109.26.32:80',
+        target: 'https://wanrenhao.me/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

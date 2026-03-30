@@ -6,6 +6,9 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
+// 防止 401 重复处理的标志位
+let isHandling401 = false
+
 /**
  * 创建 Axios 实例
  * 配置基础参数：baseURL、timeout、默认 headers
@@ -62,13 +65,29 @@ request.interceptors.response.use(
       
       switch (status) {
         case 401:
-          // 未授权，Session 失效，重定向到登录页
-          ElMessage.error('登录已过期，请重新登录')
-          
-          // 动态导入 router 避免循环依赖
-          import('@/router').then(({ default: router }) => {
-            router.push({ name: 'Login', query: { redirect: router.currentRoute.value.fullPath } })
-          })
+          // 静默模式（如应用启动时的 Session 探测）：直接 reject，不弹提示不跳转
+          if (error.config?._silent) {
+            break
+          }
+          // 防止多个并发请求同时触发 401 处理
+          if (!isHandling401) {
+            isHandling401 = true
+            ElMessage.error('登录已过期，请重新登录')
+            // 动态导入避免循环依赖，同时清除本地登录状态并跳转登录页
+            Promise.all([
+              import('@/router'),
+              import('@/store/modules/user')
+            ]).then(([{ default: router }, { useUserStore }]) => {
+              const userStore = useUserStore()
+              // 清除 Session 提示标记和本地认证状态（不调用后端 logout，Session 已失效）
+              localStorage.removeItem('kiwi_session_hint')
+              userStore.$patch({ isLoggedIn: false, userInfo: null })
+              router.push({ name: 'Login', query: { redirect: router.currentRoute.value.fullPath } })
+            }).finally(() => {
+              // 延迟重置标志位，避免短时间内重复触发
+              setTimeout(() => { isHandling401 = false }, 3000)
+            })
+          }
           break
           
         case 400:

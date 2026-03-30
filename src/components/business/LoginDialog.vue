@@ -13,15 +13,28 @@
       label-width="0"
       @submit.prevent="handleLogin"
     >
-      <el-form-item prop="emailOrUsername">
+      <el-form-item prop="username">
         <el-input
-          v-model="loginForm.emailOrUsername"
-          placeholder="邮箱或用户名"
+          v-model="loginForm.username"
+          placeholder="用户名"
           size="large"
           clearable
         >
           <template #prefix>
             <el-icon><User /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+
+      <el-form-item prop="email">
+        <el-input
+          v-model="loginForm.email"
+          placeholder="邮箱"
+          size="large"
+          clearable
+        >
+          <template #prefix>
+            <el-icon><Message /></el-icon>
           </template>
         </el-input>
       </el-form-item>
@@ -66,7 +79,8 @@ import { ref, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
+import { User, Lock, Message } from '@element-plus/icons-vue'
+import { isValidEmail, isValidUsername } from '@/utils/validators'
 
 const props = defineProps({
   modelValue: {
@@ -87,14 +101,32 @@ const dialogVisible = ref(props.modelValue)
 
 // 登录表单数据
 const loginForm = reactive({
-  emailOrUsername: '',
+  username: '',
+  email: '',
   password: ''
 })
 
 // 表单验证规则
 const rules = {
-  emailOrUsername: [
-    { required: true, message: '请输入邮箱或用户名', trigger: 'blur' }
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value && !isValidUsername(value)) callback(new Error('用户名必须为3-20个字符'))
+        else callback()
+      },
+      trigger: 'blur'
+    }
+  ],
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value && !isValidEmail(value)) callback(new Error('请输入有效的邮箱地址'))
+        else callback()
+      },
+      trigger: 'blur'
+    }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' }
@@ -123,9 +155,9 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-    // 调用 User Store 的 login action
     await userStore.login({
-      emailOrUsername: loginForm.emailOrUsername,
+      username: loginForm.username,
+      email: loginForm.email,
       password: loginForm.password
     })
 
@@ -169,7 +201,8 @@ const handleClose = () => {
  * 重置表单
  */
 const resetForm = () => {
-  loginForm.emailOrUsername = ''
+  loginForm.username = ''
+  loginForm.email = ''
   loginForm.password = ''
   loginFormRef.value?.clearValidate()
 }

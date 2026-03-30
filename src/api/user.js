@@ -17,7 +17,8 @@ export const register = (data) => {
 /**
  * 用户登录
  * @param {Object} data - 登录信息
- * @param {string} data.emailOrUsername - 邮箱或用户名
+ * @param {string} data.username - 用户名
+ * @param {string} data.email - 邮箱
  * @param {string} data.password - 密码
  * @returns {Promise<{data: Object, message: string}>} 登录结果（后端使用 Session，data 为空对象）
  */
@@ -35,10 +36,11 @@ export const logout = () => {
 
 /**
  * 获取当前用户信息
+ * @param {boolean} [silent=false] - 静默模式：401 时不触发全局错误提示，用于应用启动时的 Session 探测
  * @returns {Promise<{data: Object, message: string}>} 用户信息
  */
-export const getCurrentUser = () => {
-  return request.get('/users/me')
+export const getCurrentUser = (silent = false) => {
+  return request.get('/users/me', { _silent: silent })
 }
 
 /**

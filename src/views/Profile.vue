@@ -182,7 +182,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Loading, Edit, Calendar, Document } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
-import { getCurrentUser, updateProfile } from '@/api/user'
+import { updateProfile } from '@/api/user'
 import { getMyArticles } from '@/api/content'
 import { formatTime } from '@/utils/formatters'
 import ArticleCard from '@/components/common/ArticleCard.vue'
@@ -190,8 +190,8 @@ import ArticleCard from '@/components/common/ArticleCard.vue'
 const router = useRouter()
 const userStore = useUserStore()
 
-// 用户信息
-const userInfo = ref(null)
+// 用户信息：优先复用 store 中已有的数据，避免重复调用 /users/me
+const userInfo = ref(userStore.userInfo)
 const loading = ref(false)
 
 // 文章列表
@@ -220,12 +220,17 @@ const editRules = {
 
 /**
  * 获取用户信息
+ * 优先复用 store 中已有的数据，仅在无数据时才发起 /users/me 请求
  */
 const fetchUserInfo = async () => {
+  if (userStore.userInfo) {
+    userInfo.value = userStore.userInfo
+    return
+  }
   loading.value = true
   try {
-    const { data } = await getCurrentUser()
-    userInfo.value = data
+    await userStore.fetchUserInfo()
+    userInfo.value = userStore.userInfo
   } catch (error) {
     console.error('获取用户信息失败:', error)
   } finally {
@@ -311,10 +316,9 @@ const handleSaveProfile = async () => {
     })
     ElMessage.success('资料更新成功')
     editDialogVisible.value = false
-    // 刷新用户信息
-    await fetchUserInfo()
-    // 同步更新 store 中的用户信息
-    userStore.updateUserInfo(userInfo.value)
+    // 通过 store 刷新用户信息，同步更新本地引用
+    await userStore.fetchUserInfo()
+    userInfo.value = userStore.userInfo
   } catch (error) {
     console.error('更新资料失败:', error)
   } finally {
